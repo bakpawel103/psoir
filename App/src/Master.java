@@ -1,12 +1,12 @@
 import java.io.IOException;
 import java.net.*;
 
-public class Server {
+public class Master {
     protected ServerSocket mySocket;
     protected int myPort;
 
-    public Server() { this(5555); }
-    public Server(int port) {
+    public Master() { this(5555); }
+    public Master(int port) {
         try {
             myPort = port;
             mySocket = new ServerSocket(myPort);
@@ -20,7 +20,7 @@ public class Server {
         while(true) {
             // accept a connection socket
             Socket newClient = mySocket.accept();
-            System.out.println("Accepted new client " + newClient.getPort());
+            System.out.println("Connected a new worker " + newClient.getPort());
             // create handler
             RequestHandler requestHandler = makeHandler(newClient);
             // launch handler
@@ -40,7 +40,7 @@ public class Server {
             port = Integer.parseInt(args[0]);
         }
 
-        Server server = new Server(port);
+        Master server = new Master(port);
         server.listen();
     }
 }

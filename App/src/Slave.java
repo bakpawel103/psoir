@@ -1,11 +1,11 @@
 import java.io.*;
 
-public class SimpleClient extends Correspondent {
+public class Slave extends Correspondent {
     protected BufferedReader stdin;
     protected PrintWriter stdout;
     protected PrintWriter stderr;
 
-    public SimpleClient(String host, int port) {
+    public Slave(String host, int port) {
         requestConnection(host, port);
         stdout = new PrintWriter(
                 new BufferedWriter(
@@ -18,7 +18,7 @@ public class SimpleClient extends Correspondent {
     }
 
     public void repl() {
-        stdout.print("Write message to the server: ");
+        stdout.print("Write message to a Master: ");
 
         while(true) {
             try {
@@ -59,7 +59,7 @@ public class SimpleClient extends Correspondent {
             host = args[1];
         }
 
-        SimpleClient client = new SimpleClient(host, port);
+        Slave client = new Slave(host, port);
         client.repl();
     }
 }
