@@ -5,6 +5,8 @@ public class Slave extends Correspondent {
     protected PrintWriter stdout;
     protected PrintWriter stderr;
 
+    private SlaveServerSocketReader slaveServerSocketReader;
+
     public Slave(String host, int port) {
         requestConnection(host, port);
         stdout = new PrintWriter(
@@ -15,10 +17,14 @@ public class Slave extends Correspondent {
                         new OutputStreamWriter(System.err)), true);
         stdin = new BufferedReader(
                 new InputStreamReader(System.in));
+
+        slaveServerSocketReader = new SlaveServerSocketReader(sockIn);
+        slaveServerSocketReader.setDaemon(true);
+        slaveServerSocketReader.start();
     }
 
     public void repl() {
-        stdout.print("Write message to a Master: ");
+        stdout.println("Write message to a Master: ");
 
         while(true) {
             try {
@@ -35,9 +41,6 @@ public class Slave extends Correspondent {
 
                 stdout.println("sending: " + msg);
                 send(msg);
-
-                msg = receive();
-                stdout.println("received: " + msg);
             } catch(IOException e) {
                 stderr.println(e.getMessage());
                 break;
